@@ -1,22 +1,18 @@
 document.addEventListener("DOMContentLoaded", function() {
 
 
+    
 
 
-    const button = document.getElementById('lookup');
+    const buttonCounties = document.getElementById('lookup');
+    const buttonCities = document.getElementById('lookupCs');
     const resultContainer = document.getElementById('result');
+    var countryName = document.getElementById('country');
+    
+    function fetcher(urlParameter){
+        
 
-  
-
-   
-
-    button.addEventListener( 'click', function (){
-        var countryName = document.getElementById('country').value;
-        console.log(countryName);
-
-        var urlParameter = '?country=' + countryName;
-
-
+        console.log(urlParameter);
 
         fetch("world.php" + urlParameter)
             .then(response => response.text())
@@ -27,7 +23,27 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             ) 
             .catch(error => console.error("Error", error));
+
+    }
+
+
+    buttonCities.addEventListener( 'click', function (){
+        
+        var urlParameter = '?country=' + countryName.value + "&lookup=cities";
+        fetcher(urlParameter);
+
+
     })
+
+
+
+    buttonCounties.addEventListener( 'click', function (){
+        var urlParameter = '?country=' + countryName.value;
+        fetcher(urlParameter);
+    })
+
+
+
 
 
 

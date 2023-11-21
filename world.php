@@ -6,15 +6,33 @@ $dbname = 'world';
 
 
 $country = $_GET['country'];
+$city = isset($_GET['lookup']) ? isset($_GET['lookup']): "";
 
 $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
 
-$stmt = $conn->query("SELECT * FROM countries WHERE name LIKE '%$country%';");
+
+
+if(strlen($city) > 0)
+{
+
+  $stmt = $conn->query("SELECT * FROM countries as c join cities as cs on c.code = cs.country_code WHERE c.name LIKE '%$country%';");
+
+}
+else{
+
+  $stmt = $conn->query("SELECT * FROM countries as c WHERE name LIKE '%$country%';");
+
+}
 
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
+
+
 ?>
 
+
+<?php if (!(strlen($city) > 0)): ?>
 <table>
   <thead>
     <th>Name</th>
@@ -34,11 +52,26 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </tbody>
 </table>
 
+<?php else: ?>
+
+<table>
+  <thead>
+    <th>Name</th>
+    <th>District</th>
+    <th>Population</th>
+  </thead>
+  <tbody>
+    <?php foreach ($results as $result): ?>
+    <tr>
+      <td><?= $result['name']; ?></td>
+      <td><?= $result['district']; ?></td>
+      <td><?= $result['population']; ?></td>
+    </tr>
+    <?php endforeach; ?>
+  </tbody>
+</table>
+<?php endif; ?>
 
 
 
-<ul>
-<?php foreach ($results as $row): ?>
-  <li><?= $row['name'] . ' is ruled by ' . $row['head_of_state']; ?></li>
-<?php endforeach; ?>
-</ul>
+
